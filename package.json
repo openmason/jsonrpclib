@@ -1,0 +1,21 @@
+{
+  "name": "jsonrpclib",
+  "description": "json rpc server 2.0 library without transport",
+  "homepage": "https://github.com/openmason/jsonrpclib",
+  "version": "0.0.1",
+  "author": "el aras <openmason@gmail.com>",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "mocha"     : ">= 1.7.4",
+    "should"    : ">= 1.2.1"
+  },
+  "keywords": ["json", "rpc", "server"],
+  "repository": {"type":"git", "url": "git://github.com/openmason/jsonrpclib"},
+  "main": "index",
+  "scripts": { 
+    "prepublish" : "npm prune",
+    "test" : "make test" 
+  },
+  "engines": { "node":">= 0.8.0" }
+}
