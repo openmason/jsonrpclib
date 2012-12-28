@@ -22,3 +22,6 @@ Please refer to test directory for full suite of test cases and how to use.
     // res is a json string and would be like
     // {"jsonrpc":"2.0","result":19,"id":"1"}
 
+# Tests
+Full set of test cases can be found in test directory. To run tests just issue `make test`
+    

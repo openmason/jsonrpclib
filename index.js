@@ -116,17 +116,17 @@ var RpcErrors = {
   SERVER_ERROR    : { code:-32000, message: 'Server error' }
 };
 
+// JSON RPC library entry point
 var JSONRpc = function(module, debug) {
-  this.debug = debug || true;
+  this.debug = debug || false;
   this.jsonrpc = "2.0";
-  this.batch = false;
   // check & load the methods in module
   this.methods = module;
   if(handy.getType(module)=='string') {
     this.methods = require(module);
   }
   if(this.debug) {
-    logger.debug('Loaded with methods:'+this.methods);
+    logger.debug('Loaded with methods:'+_.functions(this.methods));
   }
 };
 
@@ -135,24 +135,24 @@ var JSONRpc = function(module, debug) {
 JSONRpc.prototype.request = function(jsonBody) {
   var self=this;
   self._debug(true, jsonBody);
-  self.batch = false;
-  var id = null;
 
+  var id = null;
+  var batch = false;
   var rpcObj;
   // first step is to parse the json
   try {
     rpcObj = JSON.parse(jsonBody);
   } catch(err) {
-    return self.error(RpcErrors.PARSE_ERROR, id, err.message);
+    return JSON.stringify(self.error(RpcErrors.PARSE_ERROR, id, err.message));
   }
   var requests = [];
   var results = [];
   // if rpcObj is array, then its a batch request
   if(handy.getType(rpcObj)=='array') {
     if(rpcObj.length==0) {
-      return self.error(RpcErrors.INVALID_REQUEST, id);
+      return JSON.stringify(self.error(RpcErrors.INVALID_REQUEST, id));
     }
-    self.batch = true;
+    batch = true;
     requests = rpcObj;
   } else {
     requests = [rpcObj];
@@ -182,12 +182,11 @@ JSONRpc.prototype.request = function(jsonBody) {
     }
   });
   // return back the result
-  if(results.length==1) {
-    return results[0];
-  } else if(results.length>1) {
-    return results;
-  }
-  return;
+  if(results.length<=0) return;
+  if(batch==false) {
+    return JSON.stringify(results[0]);
+  } 
+  return JSON.stringify(results);
 };
 
 // return back the result object
@@ -195,9 +194,8 @@ JSONRpc.prototype.result = function(id, result) {
   var res = { jsonrpc: this.jsonrpc,
               result: result,
               id: id };
-  var resStr = JSON.stringify(res);
-  this._debug(false, resStr);
-  return resStr;
+  this._debug(false, res);
+  return res;
 };
 
 
@@ -209,9 +207,8 @@ JSONRpc.prototype.error = function(err, id, data) {
   if(data) {
     errorObj['data'] = data;
   }
-  var errorStr = JSON.stringify(errorObj);
-  this._debug(false, errorStr);
-  return errorStr;
+  this._debug(false, errorObj);
+  return errorObj;
 };
 
 // ---- private functions
@@ -231,7 +228,7 @@ JSONRpc.prototype._validate = function(requestObj) {
   }
   // - check for method
   if(!_.has(requestObj, 'method')) {
-    return self.error(RpcErrors.INVALID_REQUEST, requestObj.id, 'missing method param');
+    return self.error(RpcErrors.INVALID_REQUEST, requestObj.id, 'missing method to call');
   }
   // - check if method is present
   var fns = _.functions(self.methods);
@@ -280,9 +277,12 @@ function _getParamNames(func) {
 }
 
 // debug request/response statements
-JSONRpc.prototype._debug = function(isRequest, str) {
+JSONRpc.prototype._debug = function(isRequest, value) {
   if(this.debug) {
-    logger.debug((isRequest?'-->':'<--')+' ' + str);
+    if(handy.getType(value)!='string') {
+      value = JSON.stringify(value);
+    }
+    logger.debug((isRequest?'-->':'<--')+' ' + value);
   }
 };
 
