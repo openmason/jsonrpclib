@@ -2,9 +2,11 @@
   "name": "jsonrpclib",
   "description": "json rpc server 2.0 library without transport",
   "homepage": "https://github.com/openmason/jsonrpclib",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "el aras <openmason@gmail.com>",
   "dependencies": {
+    "handy"     : ">= 0.0.11",
+    "underscore": ">= 1.4.3"
   },
   "devDependencies": {
     "mocha"     : ">= 1.7.4",
