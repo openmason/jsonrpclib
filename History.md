@@ -1,4 +1,4 @@
-# release 0.1.1
+# release 0.1.2
  * full implementaion of rpc 2.0 spec 
  * unit test cases added
 

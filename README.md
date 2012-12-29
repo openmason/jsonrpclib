@@ -1,10 +1,11 @@
 [![build status](https://secure.travis-ci.org/openmason/jsonrpclib.png)](http://travis-ci.org/openmason/jsonrpclib)
 # json rpc library
-json rpc 2.0 server library (no transport is provided, just the json spec part)
+json rpc 2.0 server library.
+For a ready to use ZeroMQ-JSON-RPC server, please refer to https://github.com/openmason/zmqrpc
 
 # Features
- * json rpc 2.0 spec (see the spec http://www.jsonrpc.org/specification for details)
- * support for both positional arguments and named arguments
+ * full implementation of json rpc 2.0 spec (see the spec http://www.jsonrpc.org/specification for details)
+ * support for both positional and named arguments
  * support for batch request/response
 
 # Usage
