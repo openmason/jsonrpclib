@@ -4,6 +4,8 @@ json rpc 2.0 server library (no transport is provided, just the json spec part)
 
 # Features
  * json rpc 2.0 spec (see the spec http://www.jsonrpc.org/specification for details)
+ * support for both positional arguments and named arguments
+ * support for batch request/response
 
 # Usage
 Please refer to test directory for full suite of test cases and how to use.
