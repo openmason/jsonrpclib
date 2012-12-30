@@ -26,6 +26,7 @@ describe('json-rpc library', function() {
   var testModules = {
     add: function(a,b) { return a+b; },
     subtract: function(a,b) { return a-b; },
+    getName: function() { return 'hi'; },
     name: 'test module'
   };
   var debug=false;
@@ -111,10 +112,25 @@ describe('json-rpc library', function() {
       assert.equal(_getCodeOrResult(res), INVALID_PARAMS);
 
       res=rpc.request('{"jsonrpc":"2.0", "method":"subtract", "params":{"b":3,"a":34}, "id":1}');
-      assert.equal(_getCodeOrResult(res), INVALID_PARAMS);
+      assert.equal(_getCodeOrResult(res), 31);
 
       res=rpc.request('{"jsonrpc":"2.0", "method":"add", "params":{"b":3,"a":34}, "id":1}');
-      assert.equal(_getCodeOrResult(res), METHOD_NOT_FOUND);
+      assert.equal(_getCodeOrResult(res), 37);
+
+      res=rpc.request('{"jsonrpc":"2.0", "method":"getName", "id":1}');
+      assert.equal(_getCodeOrResult(res), 'hi');
+
+      res=rpc.request('{"jsonrpc":"2.0", "method":"getName", "params":{}, "id":1}');
+      assert.equal(_getCodeOrResult(res), 'hi');
+
+      res=rpc.request('{"jsonrpc":"2.0", "method":"getName", "params":[], "id":1}');
+      assert.equal(_getCodeOrResult(res), 'hi');
+
+      res=rpc.request('{"jsonrpc":"2.0", "method":"getName", "params":[1], "id":1}');
+      assert.equal(_getCodeOrResult(res), INVALID_PARAMS);
+
+      res=rpc.request('{"jsonrpc":"2.0", "method":"getName", "params":{"a":12}, "id":1}');
+      assert.equal(_getCodeOrResult(res), INVALID_PARAMS);
 
       // valid
       res=rpc.request('{"jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1}');
@@ -142,13 +158,13 @@ describe('json-rpc library', function() {
   });
 
   // lets copy & paste all the examples from rpc spec page
-  testModules = {
+  var testModules1 = {
     sum: function(a,b,c) { return a+b+c; },
     subtract: function(minuend,subtrahend) { return minuend-subtrahend; },
     get_data: function() { return ['hello',5]; }
   };
   describe('rpc spec examples', function() {
-    var rpc=new jsonrpclib(testModules,debug);
+    var rpc=new jsonrpclib(testModules1,debug);
     var res;
     it('rpc call with positional parameters', function(done) {
       res=rpc.request('{"jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1}');

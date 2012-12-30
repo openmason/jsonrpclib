@@ -1,4 +1,5 @@
-# release 0.1.2
+# release 0.1.3
+ * fixed issue during empty params
  * full implementaion of rpc 2.0 spec 
  * unit test cases added
 

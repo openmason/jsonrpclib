@@ -237,7 +237,7 @@ JSONRpc.prototype._validate = function(requestObj) {
   }
 
   // - parameter checks
-  var params=_getParamNames(self.methods[requestObj.method]);
+  var params=_getParamNames(self.methods[requestObj.method]) || [];
   // - if params are absent and required for the method, its an error
   if(!_.has(requestObj,'params') && params && params.length>0) {
     return self.error(RpcErrors.INVALID_PARAMS, requestObj.id, 'params expected:'+params);
